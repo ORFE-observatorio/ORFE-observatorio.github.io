@@ -1,0 +1,273 @@
+# Administration du site de l'ORFE (Sveltia CMS).
+# Ce fichier décrit les formulaires de l'admin. Il ne contient aucun secret.
+# Chaque enregistrement dans l'admin crée un « commit » dans le dépôt GitHub ; GitHub reconstruit alors le site.
+
+backend:
+  name: github
+  repo: ORFE-observatorio/orfe-site
+  branch: main
+  # Phase 2 : connexion « Se connecter avec GitHub » via Sveltia CMS Authenticator (Cloudflare Workers).
+  # base_url: https://sveltia-cms-auth.VOTRE-SOUS-DOMAINE.workers.dev
+  commit_messages:
+    create: "Admin : ajout de {{collection}} « {{slug}} »"
+    update: "Admin : modification de {{collection}} « {{slug}} »"
+    delete: "Admin : suppression de {{collection}} « {{slug}} »"
+    uploadMedia: "Admin : ajout de l'image « {{path}} »"
+    deleteMedia: "Admin : suppression de l'image « {{path}} »"
+
+# Brouillon → En relecture → Prête → Publiée. Un brouillon n'apparaît jamais sur le site.
+publish_mode: editorial_workflow
+
+site_url: https://orfe-observatoire.com
+display_url: https://orfe-observatoire.com
+
+media_folder: src/assets/uploads
+public_folder: /assets/uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  # ------------------------------------------------------------------ Publications
+  - name: publications
+    label: Publications
+    label_singular: Publication
+    description: >-
+      Veilles d'actualité et notes d'analyse. Une publication = un document bilingue.
+      Une date future programme la publication : elle apparaîtra automatiquement dans l’heure qui suit (mise à jour toutes les heures, de 6 h à 22 h).
+    folder: content/publications
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: titre_es
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug_length: 60
+    summary: "{{titre_es}}"
+    sortable_fields: [date, titre_es]
+    preview_path: "es/publicaciones/{{slug}}/"
+    fields:
+      - { label: "Format", name: format, widget: select, default: veille,
+          options: [ { label: "Veille d’actualité", value: veille }, { label: "Note d’analyse", value: note } ] }
+      - { label: "Pôle", name: pole, widget: select,
+          options: [ { label: "Politique, Diplomatie & Société", value: pds }, { label: "Économie & Finances", value: eco },
+                     { label: "Art & Culture", value: art }, { label: "Élections 2027", value: ele } ] }
+      - { label: "Date de publication", name: date, widget: datetime,
+          hint: "Date et heure affichées sur le site. Une date future programme la publication (parution dans l’heure qui suit, entre 6 h et 22 h)." }
+      - { label: "Auteurs", name: auteurs, widget: relation, collection: auteurs, multiple: true,
+          value_field: "{{slug}}", search_fields: [prenom, nom], display_fields: ["{{prenom}} {{nom}}"],
+          hint: "Si l’auteur n’existe pas encore, créez-le d’abord dans « Auteurs »." }
+      - { label: "Lieu sur la carte", name: lieu, widget: relation, collection: donnees, file: lieux, required: false,
+          value_field: "lieux.*.id", search_fields: ["lieux.*.nom_fr", "lieux.*.nom_es"], display_fields: ["lieux.*.nom_fr"],
+          hint: "Le point lumineux de la publication sur la carte. Pour ajouter un lieu : Données du site → Lieux de la carte." }
+      - { label: "Mettre en avant sur l’accueil (« L’analyse du moment »)", name: une, widget: boolean, default: false, required: false,
+          hint: "La plus récente des publications cochées apparaît en tête de l’accueil. Sans case cochée : la plus récente." }
+      - { label: "Langue d’origine", name: langue_originale, widget: select, default: es,
+          options: [ { label: "Espagnol", value: es }, { label: "Français", value: fr } ] }
+      - { label: "Traduction", name: traduction, widget: select, default: relue,
+          options: [ { label: "Traduction relue", value: relue }, { label: "Traduction en cours", value: en-cours }, { label: "Pas de traduction", value: aucune } ],
+          hint: "Une traduction n’est jamais publiée sans relecture humaine." }
+
+      # Version espagnole
+      - { label: "ES · Titre", name: titre_es, widget: string, hint: "Titre en espagnol. Sert aussi à l’adresse de la page." }
+      - { label: "ES · Chapô (entradilla)", name: chapo_es, widget: text, hint: "Une ou deux phrases." }
+      - { label: "ES · Points clés", name: points_es, widget: list, required: false, field: { label: "Point", name: point, widget: string },
+          hint: "Notes d’analyse uniquement." }
+      - { label: "ES · Texte", name: corps_es, widget: markdown, required: false, modes: [rich_text, raw],
+          hint: "Laisser vide si la publication n’existe qu’en français. Notes de bas de page : passer en mode Markdown et écrire [^1]." }
+      - { label: "ES · Encadré « Método y fuentes »", name: methode_es, widget: markdown, required: false, modes: [rich_text, raw] }
+      - { label: "ES · Description de partage", name: description_es, widget: string, required: false,
+          hint: "Facultatif. Sinon, le chapô est utilisé dans les aperçus LinkedIn." }
+      - { label: "ES · PDF à télécharger", name: pdf_es, widget: file, required: false, hint: "Facultatif. Version PDF de la publication en espagnol (export Canva). Un bouton « Télécharger le PDF » apparaît sur la page." }
+
+      # Version française
+      - { label: "FR · Titre", name: titre_fr, widget: string }
+      - { label: "FR · Chapô", name: chapo_fr, widget: text }
+      - { label: "FR · Points clés", name: points_fr, widget: list, required: false, field: { label: "Point", name: point, widget: string } }
+      - { label: "FR · Texte", name: corps_fr, widget: markdown, required: false, modes: [rich_text, raw],
+          hint: "Laisser vide si la publication n’existe qu’en espagnol." }
+      - { label: "FR · Encadré « Méthode et sources »", name: methode_fr, widget: markdown, required: false, modes: [rich_text, raw] }
+      - { label: "FR · Description de partage", name: description_fr, widget: string, required: false }
+      - { label: "FR · PDF à télécharger", name: pdf_fr, widget: file, required: false, hint: "Facultatif. Version PDF de la publication en français (export Canva). Un bouton « Télécharger le PDF » apparaît sur la page." }
+
+      # Commun aux deux langues
+      - label: "Sources"
+        name: sources
+        widget: list
+        required: false
+        hint: "Obligatoires pour les veilles et les notes."
+        summary: "{{fields.emetteur}} · {{fields.titre}}"
+        fields:
+          - { label: "Émetteur (institution, journal, auteur)", name: emetteur, widget: string, required: false }
+          - { label: "Titre du document", name: titre, widget: string }
+          - { label: "Lien", name: url, widget: string, required: false }
+          - { label: "Année", name: annee, widget: string, required: false }
+      - { label: "Image", name: image, widget: image, required: false, choose_url: false,
+          hint: "Photo libre de droits ou de l’équipe. Jamais d’image générée par IA." }
+      - { label: "Image · texte alternatif", name: image_alt, widget: string, required: false, hint: "Obligatoire si une image est ajoutée : décrire ce qu’on voit." }
+      - { label: "Image · crédit", name: image_credit, widget: string, required: false, hint: "Obligatoire si une image est ajoutée (auteur, licence)." }
+      - { label: "Mise à jour", name: mise_a_jour, widget: datetime, required: false, default: "",
+          hint: "Laisser vide pour une nouvelle publication. À remplir seulement après une modification de fond : la date s’affiche sur la page." }
+      - label: "Corrections"
+        name: corrections
+        widget: list
+        required: false
+        hint: "Toute correction après publication est datée et expliquée."
+        fields:
+          - { label: "Date", name: date, widget: datetime }
+          - { label: "Correction (ES)", name: texte_es, widget: string }
+          - { label: "Correction (FR)", name: texte_fr, widget: string }
+      - { label: "Usage interne · relu par", name: relu_par, widget: string, required: false, hint: "Non affiché sur le site." }
+      - { label: "Usage interne · date de validation", name: date_validation, widget: datetime, required: false, default: "", hint: "Non affiché sur le site." }
+
+  # ------------------------------------------------------------------ Auteurs
+  - name: auteurs
+    label: Auteurs
+    label_singular: Auteur
+    description: "Une page est créée pour chaque auteur dès sa première publication."
+    folder: content/auteurs
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: nom
+    slug: "{{prenom}}-{{nom}}"
+    summary: "{{prenom}} {{nom}}"
+    fields:
+      - { label: "Prénom", name: prenom, widget: string }
+      - { label: "Nom", name: nom, widget: string, hint: "Sert à la référence « Comment citer » : Nom, Prénom." }
+      - { label: "Fonction à l’ORFE", name: fonction, widget: select, required: false,
+          options: [ { label: "Analyste", value: analyste }, { label: "Responsable de pôle", value: responsable } ],
+          hint: "Laisser vide pour une signature extérieure." }
+      - { label: "Pôle", name: pole, widget: select, required: false,
+          options: [ { label: "Politique, Diplomatie & Société", value: pds }, { label: "Économie & Finances", value: eco },
+                     { label: "Art & Culture", value: art }, { label: "Élections 2027", value: ele } ] }
+      - { label: "Biographie (ES)", name: bio_es, widget: text, required: false, hint: "Deux lignes, rédigées et validées par l’auteur." }
+      - { label: "Biographie (FR)", name: bio_fr, widget: text, required: false }
+      - { label: "LinkedIn", name: linkedin, widget: string, required: false }
+      - { label: "Photo", name: photo, widget: image, required: false, choose_url: false }
+
+  # ------------------------------------------------------------------ Textes des pages
+  - name: pages
+    label: Textes des pages
+    label_singular: Page
+    description: "Titres, introductions et textes des pages fixes, en espagnol et en français."
+    files:
+      - name: accueil
+        label: "Accueil (référencement)"
+        file: content/pages/accueil.json
+        fields:
+          - { label: "Espagnol", name: es, widget: object, fields: [ { label: "Description (référencement)", name: seo_description, widget: text } ] }
+          - { label: "Français", name: fr, widget: object, fields: [ { label: "Description (référencement)", name: seo_description, widget: text } ] }
+      - { name: l-orfe, label: "L’ORFE", file: content/pages/l-orfe.json, fields: &texte_complet
+          [ { label: "Espagnol", name: es, widget: object, fields: [
+                { label: "Titre", name: titre, widget: string }, { label: "Introduction", name: intro, widget: text, required: false },
+                { label: "Texte", name: corps, widget: markdown, required: false },
+                { label: "Titre (onglet et référencement)", name: seo_titre, widget: string },
+                { label: "Description (référencement)", name: seo_description, widget: text } ] },
+            { label: "Français", name: fr, widget: object, fields: [
+                { label: "Titre", name: titre, widget: string }, { label: "Introduction", name: intro, widget: text, required: false },
+                { label: "Texte", name: corps, widget: markdown, required: false },
+                { label: "Titre (onglet et référencement)", name: seo_titre, widget: string },
+                { label: "Description (référencement)", name: seo_description, widget: text } ] } ] }
+      - { name: collaborer, label: "Collaborer", file: content/pages/collaborer.json, fields: *texte_complet }
+      - { name: contact, label: "Contact", file: content/pages/contact.json, fields: *texte_complet }
+      - { name: newsletter, label: "Newsletter", file: content/pages/newsletter.json, fields: *texte_complet }
+      - { name: mentions-legales, label: "Mentions légales", file: content/pages/mentions-legales.json, fields: *texte_complet }
+      - { name: confidentialite, label: "Confidentialité", file: content/pages/confidentialite.json, fields: *texte_complet }
+      - { name: reutilisation, label: "Réutilisation", file: content/pages/reutilisation.json, fields: *texte_complet }
+      - { name: publications, label: "Liste des publications", file: content/pages/publications.json, fields: &texte_liste
+          [ { label: "Espagnol", name: es, widget: object, fields: [
+                { label: "Titre", name: titre, widget: string }, { label: "Introduction", name: intro, widget: text, required: false },
+                { label: "Texte", name: corps, widget: hidden, required: false },
+                { label: "Titre (onglet et référencement)", name: seo_titre, widget: string },
+                { label: "Description (référencement)", name: seo_description, widget: text } ] },
+            { label: "Français", name: fr, widget: object, fields: [
+                { label: "Titre", name: titre, widget: string }, { label: "Introduction", name: intro, widget: text, required: false },
+                { label: "Texte", name: corps, widget: hidden, required: false },
+                { label: "Titre (onglet et référencement)", name: seo_titre, widget: string },
+                { label: "Description (référencement)", name: seo_description, widget: text } ] } ] }
+      - { name: poles, label: "Liste des pôles", file: content/pages/poles.json, fields: *texte_liste }
+      - { name: equipe, label: "Équipe (en-tête)", file: content/pages/equipe.json, fields: *texte_liste }
+      - { name: auteurs, label: "Auteurs (en-tête)", file: content/pages/auteurs.json, fields: *texte_liste }
+      - { name: recherche, label: "Recherche (en-tête)", file: content/pages/recherche.json, fields: *texte_liste }
+
+  # ------------------------------------------------------------------ Données du site
+  - name: donnees
+    label: Données du site
+    description: "Équipe, pôles, lieux de la carte et réglages généraux."
+    files:
+      - name: equipe
+        label: "Équipe"
+        file: content/donnees/equipe.json
+        fields:
+          - label: "Groupes"
+            name: groupes
+            widget: list
+            summary: "{{fields.titre_fr}}{{fields.pole}}"
+            fields:
+              - { label: "Identifiant", name: id, widget: string, hint: "Court et sans espace (direction, com, pds…). Ne pas modifier." }
+              - { label: "Pôle", name: pole, widget: select, required: false,
+                  options: [ { label: "Politique, Diplomatie & Société", value: pds }, { label: "Économie & Finances", value: eco },
+                             { label: "Art & Culture", value: art }, { label: "Élections 2027", value: ele } ],
+                  hint: "Pour un pôle : le nom du pôle s’affiche automatiquement. Sinon, laisser vide et remplir les titres." }
+              - { label: "Titre (ES)", name: titre_es, widget: string, required: false }
+              - { label: "Titre (FR)", name: titre_fr, widget: string, required: false }
+              - label: "Membres"
+                name: membres
+                widget: list
+                summary: "{{fields.nom}}"
+                fields:
+                  - { label: "Nom", name: nom, widget: string }
+                  - { label: "Fonction dans un pôle", name: fonction, widget: select, required: false,
+                      options: [ { label: "Responsable du pôle", value: responsable }, { label: "Analyste", value: analyste } ] }
+                  - { label: "Rôle (ES)", name: role_es, widget: string, required: false, hint: "Pour la direction et la communication." }
+                  - { label: "Rôle (FR)", name: role_fr, widget: string, required: false }
+      - name: poles
+        label: "Pôles"
+        file: content/donnees/poles.json
+        fields:
+          - label: "Pôles"
+            name: poles
+            widget: list
+            allow_add: false
+            summary: "{{fields.nom_fr}}"
+            fields:
+              - { label: "Identifiant", name: id, widget: string, hint: "Ne pas modifier." }
+              - { label: "Adresse ES", name: slug_es, widget: string, hint: "Ne pas modifier : changerait l’adresse de la page." }
+              - { label: "Adresse FR", name: slug_fr, widget: string, hint: "Ne pas modifier : changerait l’adresse de la page." }
+              - { label: "Nom (ES)", name: nom_es, widget: string }
+              - { label: "Nom (FR)", name: nom_fr, widget: string }
+              - { label: "Description (ES)", name: description_es, widget: text }
+              - { label: "Description (FR)", name: description_fr, widget: text }
+      - name: lieux
+        label: "Lieux de la carte"
+        file: content/donnees/lieux.json
+        fields:
+          - label: "Lieux"
+            name: lieux
+            widget: list
+            summary: "{{fields.nom_fr}}"
+            fields:
+              - { label: "Identifiant", name: id, widget: string, hint: "Court, sans accent ni espace (ex. sevilla). Ne plus le modifier ensuite." }
+              - { label: "Nom (ES)", name: nom_es, widget: string }
+              - { label: "Nom (FR)", name: nom_fr, widget: string }
+              - { label: "Latitude", name: lat, widget: number, value_type: float, hint: "Ex. 40.4168 (copiez-la depuis Google Maps : clic droit sur le lieu)." }
+              - { label: "Longitude", name: lon, widget: number, value_type: float, hint: "Ex. -3.7038. Négative à l’ouest de Greenwich." }
+      - name: reglages
+        label: "Réglages généraux"
+        file: content/donnees/reglages.json
+        fields:
+          - { label: "Adresse de contact", name: email, widget: string }
+          - { label: "Page LinkedIn", name: linkedin, widget: string }
+          - { label: "Compte Instagram", name: instagram, widget: string, required: false, hint: "Laisser vide tant que le compte n’existe pas." }
+          - { label: "Année de fondation", name: fondation, widget: string }
+          - { label: "Identifiant Formspree", name: formspree, widget: string, hint: "Ne pas modifier sans raison." }
+          - { label: "Licence des publications", name: licence, widget: string }
+          - label: "Newsletter"
+            name: newsletter
+            widget: object
+            fields:
+              - { label: "Inscriptions ouvertes", name: ouverte, widget: boolean, default: false }
+              - { label: "Formulaire Brevo, espagnol (adresse « action » du code HTML simple)", name: action_es, widget: string, required: false }
+              - { label: "Formulaire Brevo, français (adresse « action » du code HTML simple)", name: action_fr, widget: string, required: false }

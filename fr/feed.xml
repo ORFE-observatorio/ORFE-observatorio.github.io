@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
+  <title>ORFE · Observatoire des Relations Franco-Espagnoles</title>
+  <subtitle>Une analyse bilatérale, indépendante et engagée.</subtitle>
+  <link href="https://orfe-observatoire.com/fr/feed.xml" rel="self"/>
+  <link href="https://orfe-observatoire.com/fr/"/>
+  <id>https://orfe-observatoire.com/fr/</id>
+  <updated>2026-11-03T17:00:00.000Z</updated>
+  <author><name>ORFE</name><email>orfe.information@gmail.com</email></author>
+  <entry>
+    <title>L’Espagne devance la France : une croissance réelle, portée par sa population</title>
+    <link href="https://orfe-observatoire.com/fr/publications/2026-11-03-l-espagne-devance-la-france/"/>
+    <id>https://orfe-observatoire.com/fr/publications/2026-11-03-l-espagne-devance-la-france/</id>
+    <published>2026-11-03T17:00:00.000Z</published>
+    <updated>2026-11-03T17:00:00.000Z</updated>
+    <author><name>Nicolás Martin Buitrago</name></author>
+    <category term="Économie &amp; Finances"/>
+    <summary>Le 30 octobre, les instituts statistiques des deux pays ont publié leurs comptes du troisième trimestre : le produit intérieur brut (PIB) espagnol a progressé de 0,6 %, le français a reculé de 0,1 %. L’écart interroge, alors que les prix montent plus vite en Espagne. Cette croissance est-elle réelle, ou seulement gonflée par l’inflation ?</summary>
+  </entry>
+  <entry>
+    <title>De l’étincelle à l’élection : les mobilisations sociales en France et en Espagne entrent en campagne électorale</title>
+    <link href="https://orfe-observatoire.com/fr/publications/2026-11-02-de-la-chispa-a-las-urnas/"/>
+    <id>https://orfe-observatoire.com/fr/publications/2026-11-02-de-la-chispa-a-las-urnas/</id>
+    <published>2026-11-02T13:00:00.000Z</published>
+    <updated>2026-11-02T13:00:00.000Z</updated>
+    <author><name>Ricardo Dorado</name></author>
+    <author><name>Yanis Foukhar</name></author>
+    <author><name>Johann Aguesseau</name></author>
+    <category term="Élections 2027"/>
+    <summary>La rentrée politique a été marquée par une série de manifestations, de la Puerta del Sol à Madrid jusqu’à la place de la République à Paris. Bien que leur forme ne soit pas forcément la même, elles portent un même message : la contestation sociale précède les urnes et semble déjà peser sur les élections générales espagnoles du 29 novembre et sur l’élection présidentielle française d’avril 2027.</summary>
+  </entry>
+</feed>

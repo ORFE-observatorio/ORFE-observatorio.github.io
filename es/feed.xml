@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es">
+  <title>ORFE · Observatorio de las Relaciones Franco-Españolas</title>
+  <subtitle>Un análisis bilateral, independiente y comprometido.</subtitle>
+  <link href="https://orfe-observatoire.com/es/feed.xml" rel="self"/>
+  <link href="https://orfe-observatoire.com/es/"/>
+  <id>https://orfe-observatoire.com/es/</id>
+  <updated>2026-11-03T17:00:00.000Z</updated>
+  <author><name>ORFE</name><email>orfe.information@gmail.com</email></author>
+  <entry>
+    <title>España adelanta a Francia: un crecimiento real, impulsado por su población</title>
+    <link href="https://orfe-observatoire.com/es/publicaciones/2026-11-03-l-espagne-devance-la-france/"/>
+    <id>https://orfe-observatoire.com/es/publicaciones/2026-11-03-l-espagne-devance-la-france/</id>
+    <published>2026-11-03T17:00:00.000Z</published>
+    <updated>2026-11-03T17:00:00.000Z</updated>
+    <author><name>Nicolás Martin Buitrago</name></author>
+    <category term="Economía &amp; Finanzas"/>
+    <summary>El 30 de octubre, los institutos de estadística de ambos países publicaron sus cuentas del tercer trimestre: el producto interior bruto (PIB) español creció un 0,6 % y el francés retrocedió un 0,1 %. La diferencia llama la atención, ya que los precios suben más deprisa en España. ¿Es real este crecimiento, o solo está inflado por la inflación?</summary>
+  </entry>
+  <entry>
+    <title>De la chispa a las urnas: las movilizaciones sociales en Francia y España entran en campaña electoral</title>
+    <link href="https://orfe-observatoire.com/es/publicaciones/2026-11-02-de-la-chispa-a-las-urnas/"/>
+    <id>https://orfe-observatoire.com/es/publicaciones/2026-11-02-de-la-chispa-a-las-urnas/</id>
+    <published>2026-11-02T13:00:00.000Z</published>
+    <updated>2026-11-02T13:00:00.000Z</updated>
+    <author><name>Ricardo Dorado</name></author>
+    <author><name>Yanis Foukhar</name></author>
+    <author><name>Johann Aguesseau</name></author>
+    <category term="Elecciones 2027"/>
+    <summary>El comienzo del curso político ha sido marcado por una serie de manifestaciones que han abarcado desde la Puerta del Sol en Madrid, hasta la Plaza de la República en París. Aunque la forma no coincide forzosamente, ambas comparten un mismo mensaje: la protesta social llega antes que las urnas y parece pesar ya sobre las elecciones generales españolas del 29 de noviembre y sobre las presidenciales francesas de abril de 2027.</summary>
+  </entry>
+</feed>
