@@ -1,0 +1,31 @@
+/* Impression : les diplomates impriment. On garde le texte, dans les deux langues, les sources et la référence. */
+@page { margin: 2cm 2.2cm; }
+html, body { background: #fff !important; color: #000 !important; }
+body { font-size: 11pt; line-height: 1.5; }
+.entete .nav, .menu-bouton, .skip-link, .preview-banner, .lettre, .pied__grille, .pied__frontiere, .lecture,
+.bloc--brume, .filtres, .fond, .carte, .carte__reperes, .doc__partager, .doc__citer-actions, .doc__signaler,
+.drapeau-exemple, .couture, .tricolore { display: none !important; }
+.entete, .entete__barre { background: none !important; box-shadow: none !important; padding: 0 0 .4cm !important; position: static !important; }
+.marque__logo { filter: invert(1); height: 1.2cm !important; }
+.marque__nom { color: #000 !important; border-color: #000 !important; display: block !important; }
+.cadre { max-width: none !important; padding: 0 !important; }
+.tete, .doc__tete, .nuit { background: none !important; color: #000 !important; padding: .4cm 0 !important; min-height: 0 !important; }
+.tete__titre, .doc__titre, .nom__es { color: #000 !important; font-size: 22pt !important; max-width: none !important; }
+.doc__titre-autre, .tete__autre, .nom__fr { color: #333 !important; font-size: 14pt !important; }
+.doc__meta, .doc__signature, .doc__signature a, .doc__fil a, .tete__intro { color: #000 !important; }
+.doc__corps, .doc__corps--deux { display: block !important; padding: .4cm 0 0 !important; }
+.doc .colonne { display: block !important; }
+.doc .colonne + .colonne { margin-top: .8cm; padding-top: .5cm; border-top: 1px solid #000; page-break-before: always; }
+.prose { font-size: 11pt !important; }
+.prose h3, .prose h4 { page-break-after: avoid; }
+.prose p, .sources li { orphans: 3; widows: 3; }
+.prose a[href^="http"]::after, .sources a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8.5pt; color: #333; word-break: break-all; }
+.encadre, .point-cle, .doc__citation { background: none !important; border: 1px solid #999 !important; }
+.doc__pied { display: block !important; }
+.doc__pied::before { display: none; }
+.doc__bloc { margin-top: .6cm; }
+.pied { background: none !important; color: #000 !important; padding: 0 !important; border-top: 1px solid #000; margin-top: 1cm; }
+.pied__bas { color: #000 !important; }
+.pied__bas::before { display: none; }
+.pied a { color: #000 !important; }
+a { color: #000 !important; text-decoration: none !important; }
